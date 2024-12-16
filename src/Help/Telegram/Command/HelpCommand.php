@@ -11,13 +11,22 @@
 
 namespace App\Help\Telegram\Command;
 
+use Psr\Log\LoggerInterface;
 use BoShurik\TelegramBotBundle\Telegram\Command\HelpCommand as BaseCommand;
 use TelegramBot\Api\Types\Update;
 
 class HelpCommand extends BaseCommand
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function isApplicable(Update $update): bool
     {
+        $this->logger->info('Checking applicability of HelpCommand');
         return $update->getMessage() !== null;
     }
 }

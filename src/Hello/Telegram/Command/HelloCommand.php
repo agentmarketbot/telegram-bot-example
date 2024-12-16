@@ -11,6 +11,7 @@
 
 namespace App\Hello\Telegram\Command;
 
+use Psr\Log\LoggerInterface;
 use BoShurik\TelegramBotBundle\Telegram\Command\AbstractCommand;
 use BoShurik\TelegramBotBundle\Telegram\Command\PublicCommandInterface;
 use TelegramBot\Api\BotApi;
@@ -18,6 +19,13 @@ use TelegramBot\Api\Types\Update;
 
 class HelloCommand extends AbstractCommand implements PublicCommandInterface
 {
+    private $logger;
+
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
     public function getName(): string
     {
         return '/hello';
@@ -30,6 +38,7 @@ class HelloCommand extends AbstractCommand implements PublicCommandInterface
 
     public function execute(BotApi $api, Update $update): void
     {
+        $this->logger->info('Executing HelloCommand');
         preg_match(self::REGEXP, $update->getMessage()->getText(), $matches);
         $who = !empty($matches[3]) ? $matches[3] : 'World';
 
